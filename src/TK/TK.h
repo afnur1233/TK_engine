@@ -1,5 +1,6 @@
 #ifndef __TK_H__
 #define __TK_H__
+#include <TK/ECS/TK_ecs.h>
 #include <TK/TK_assert.h>
 #include <TK/TK_filesystem.h>
 #include <TK/TK_memory.h>

@@ -1,6 +1,6 @@
 #include <TK/TK_string.h>
 
-bool TK_StringGrow( TK_Allocator *allocator, TK_String *string, TK_usize new_cap )
+TK_bool TK_StringGrow( TK_Allocator *allocator, TK_String *string, TK_usize new_cap )
 {
     if ( !allocator || !string )
         return false;
@@ -36,7 +36,7 @@ bool TK_StringGrow( TK_Allocator *allocator, TK_String *string, TK_usize new_cap
     return true;
 }
 
-bool TK_StringAppend( TK_Allocator *allocator, TK_String *string, TK_byte *buf, TK_usize len )
+TK_bool TK_StringAppend( TK_Allocator *allocator, TK_String *string, TK_byte *buf, TK_usize len )
 {
     if ( !allocator || !string )
         return false;

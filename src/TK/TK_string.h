@@ -55,8 +55,8 @@ struct TK_StringSlice
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TKAPI bool      TK_StringGrow   ( TK_Allocator *allocator, TK_String *string, TK_usize new_cap );
-TKAPI bool      TK_StringAppend ( TK_Allocator *allocator, TK_String *string, TK_byte *buf, TK_usize len );
+TKAPI TK_bool   TK_StringGrow   ( TK_Allocator *allocator, TK_String *string, TK_usize new_cap );
+TKAPI TK_bool   TK_StringAppend ( TK_Allocator *allocator, TK_String *string, TK_byte *buf, TK_usize len );
 TKAPI TK_String TK_StringFree   ( TK_Allocator *allocator, TK_String string );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

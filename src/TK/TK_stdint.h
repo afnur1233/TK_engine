@@ -19,4 +19,5 @@ typedef _Float64 TK_f64;
 typedef TK_i64   TK_isize;
 typedef TK_u64   TK_usize;
 typedef TK_u8    TK_byte;
+typedef bool     TK_bool;
 #endif

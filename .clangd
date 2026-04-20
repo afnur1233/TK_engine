@@ -2,11 +2,11 @@ CompileFlags:
   Add: 
     - -xc
     - -std=c23
-    - -I../deps/include
+    - -I../deps/cglm/include
     - -I../src
-    - -I../../deps/include
+    - -I../../deps/cglm/include
     - -I../../src
-    - -I../../../deps/include
+    - -I../../../deps/cglm/include
     - -I../../../src
   
 Diagnostics:
