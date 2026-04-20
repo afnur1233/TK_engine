@@ -11,7 +11,7 @@ int main()
     TK_Entity root = TK_CreateEntity( &ECS, TK_INVALID_ENTITY );
     TK_CoreAssert( root != TK_INVALID_ENTITY );
     
-    TK_Entity cube = TK_CreateEntity( &ECS, root );
+    TK_Entity cube = TK_CreateEntity( &ECS, root ); // TODO: actualy implement parent-child tree
     TK_CoreAssert( cube != TK_INVALID_ENTITY );
     
     TK_Entity_SetPosition3( &ECS, cube, (vec4){ 0.0f, 0.0f, 2.0f } );
