@@ -1,0 +1,15 @@
+CompileFlags:
+  Add: 
+    - -xc
+    - -std=c23
+    - -I../deps/include
+    - -I../src
+    - -I../../deps/include
+    - -I../../src
+    - -I../../../deps/include
+    - -I../../../src
+  
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
+  Suppress: "*"
