@@ -49,7 +49,7 @@ void TK_Entity_GetPosition3( TK_EntityContainer *container, TK_Entity entity, ve
     
     data->bitset |= TK_EntityComponentBit_Position3;
     
-    glm_vec3_dup(data->position3, position3);
+    glm_vec3_dup(data->position3, dest);
 }
 
 void TK_Entity_GetScaling3( TK_EntityContainer *container, TK_Entity entity, vec3 dest )
@@ -62,5 +62,5 @@ void TK_Entity_GetScaling3( TK_EntityContainer *container, TK_Entity entity, vec
     
     data->bitset |= TK_EntityComponentBit_Scaling3;
     
-    glm_vec3_dup(data->scaling3, scaling3);
+    glm_vec3_dup(data->scaling3, dest);
 }
