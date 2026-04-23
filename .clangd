@@ -1,12 +1,20 @@
 CompileFlags:
   Add: 
-    - -xc
     - -std=c23
     - -I../deps/cglm/include
+    - -I../deps/glfw/include
+    - -I../deps/cwalk/include
+    - -I../deps/
     - -I../src
     - -I../../deps/cglm/include
+    - -I../../deps/glfw/include
+    - -I../../deps/cwalk/include
+    - -I../../deps/
     - -I../../src
     - -I../../../deps/cglm/include
+    - -I../../../deps/glfw/include
+    - -I../../../deps/cwalk/include
+    - -I../../../deps/
     - -I../../../src
   
 Diagnostics:

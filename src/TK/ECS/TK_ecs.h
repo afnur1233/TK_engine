@@ -50,14 +50,14 @@ struct TK_EntityContainer
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TK_EntityComponentBitset TK_Entity_GetBitset     ( TK_EntityContainer *container, TK_Entity entity );
-TK_EntityContainer       TK_EntityContainer_Free ( TK_EntityContainer container );
-void                     TK_Entity_SetPosition3  ( TK_EntityContainer *container, TK_Entity entity, vec3 position3 );
-void                     TK_Entity_SetScaling3   ( TK_EntityContainer *container, TK_Entity entity, vec3 scaling3 );
-void                     TK_Entity_SetCubeMesh   ( TK_EntityContainer *container, TK_Entity entity );
-void                     TK_Entity_GetPosition3  ( TK_EntityContainer *container, TK_Entity entity, vec3 dest );
-void                     TK_Entity_GetScaling3   ( TK_EntityContainer *container, TK_Entity entity, vec3 dest );
-TK_Entity                TK_CreateEntity         ( TK_EntityContainer *container, TK_Entity parent );
+TKAPI TK_EntityComponentBitset TK_Entity_GetBitset     ( TK_EntityContainer *container, TK_Entity entity );
+TKAPI TK_EntityContainer       TK_EntityContainer_Free ( TK_EntityContainer container );
+TKAPI void                     TK_Entity_SetPosition3  ( TK_EntityContainer *container, TK_Entity entity, vec3 position3 );
+TKAPI void                     TK_Entity_SetScaling3   ( TK_EntityContainer *container, TK_Entity entity, vec3 scaling3 );
+TKAPI void                     TK_Entity_SetCubeMesh   ( TK_EntityContainer *container, TK_Entity entity );
+TKAPI void                     TK_Entity_GetPosition3  ( TK_EntityContainer *container, TK_Entity entity, vec3 dest );
+TKAPI void                     TK_Entity_GetScaling3   ( TK_EntityContainer *container, TK_Entity entity, vec3 dest );
+TKAPI TK_Entity                TK_CreateEntity         ( TK_EntityContainer *container, TK_Entity parent );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #endif

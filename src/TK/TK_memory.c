@@ -1,4 +1,7 @@
 #include <TK/TK_memory.h>
+#include <TK/TK_assert.h>
+
+
 
 TK_Allocator TK_AllocatorLibc = {
     .realloc = TK_AllocatorLibc_Realloc,
@@ -6,38 +9,51 @@ TK_Allocator TK_AllocatorLibc = {
     .alloc   = TK_AllocatorLibc_Alloc,
 };
 
+
+
 void *TK_AllocatorLibc_Realloc( TK_Allocator *allocator, void *memory, TK_usize size_old, TK_usize size_new )
 {
-    if ( !allocator || !memory || size_old == 0 || size_new == 0 )
-        return NULL;
+    TK_DebugAssert( allocator != NULL );
+    TK_DebugAssert( memory != NULL );
+    TK_DebugAssert( size_old != 0 );
+    TK_DebugAssert( size_new != 0 );
     
     return realloc( memory, size_new );
 }
 
+
+
 void *TK_AllocatorLibc_Free( TK_Allocator *allocator, void *memory, TK_usize size )
 {
-    if ( !allocator || !memory || size == 0 )
-        return NULL;
+    TK_DebugAssert( allocator != NULL );
+    TK_DebugAssert( memory != NULL );
+    TK_DebugAssert( size != 0 );
     
     free( memory );
     
     return NULL;
 }
 
+
+
 void *TK_AllocatorLibc_Alloc( TK_Allocator *allocator, TK_usize size )
 {
-    if ( !allocator || size == 0 )
-        return NULL;
+    TK_DebugAssert( allocator != NULL );
+    TK_DebugAssert( size != 0 );
     
     return malloc(size);
 }
 
+
+
 void *TK_AllocatorTracker_Realloc( TK_Allocator *ptr, void *memory, TK_usize size_old, TK_usize size_new )
 {
-    if ( !ptr || !memory || size_old == 0 || size_new == 0 )
-        return NULL;
+    TK_DebugAssert( ptr != NULL );
+    TK_DebugAssert( memory != NULL );
+    TK_DebugAssert( size_old != 0 );
+    TK_DebugAssert( size_new != 0 );
     
-    TK_AllocatorTracker *tracker = TK_REINTERPRET_CAST( tracker, ptr );
+    TK_AllocatorTracker *tracker = (TK_AllocatorTracker *)(void *)ptr;
     TK_Allocator *allocator = tracker->tracked;
     if ( !allocator )
         return NULL;
@@ -68,19 +84,20 @@ void *TK_AllocatorTracker_Realloc( TK_Allocator *ptr, void *memory, TK_usize siz
     return allocation + 1;
 }
 
+
+
 void *TK_AllocatorTracker_Free( TK_Allocator *ptr, void *memory, TK_usize size )
 {
-    if ( !ptr || !memory || size == 0 )
-        return NULL;
+    TK_DebugAssert( ptr != NULL );
+    TK_DebugAssert( memory != NULL );
+    TK_DebugAssert( size != 0 );
     
-    TK_AllocatorTracker *tracker = TK_REINTERPRET_CAST( tracker, ptr );
+    TK_AllocatorTracker *tracker = (TK_AllocatorTracker *)(void *)ptr;
+    TK_DebugAssert( tracker->tracked != NULL );
+    TK_DebugAssert( tracker->tracked->free != NULL );
+    
     TK_Allocator *allocator = tracker->tracked;
-    if ( !allocator )
-        return NULL;
-    
     TK_AllocatorFreeFunc *f_free = allocator->free;
-    if ( !f_free )
-        return NULL;
     
     TK_AllocatorTrackerAllocation *allocation = memory - sizeof ( *allocation );
     if ( allocation->next == allocation )
@@ -97,19 +114,19 @@ void *TK_AllocatorTracker_Free( TK_Allocator *ptr, void *memory, TK_usize size )
     return f_free(allocator, allocation, size);
 }
 
+
+
 void *TK_AllocatorTracker_Alloc( TK_Allocator *ptr, TK_usize size )
 {
-    if ( !ptr || size == 0 )
-        return NULL;
+    TK_DebugAssert( ptr != NULL );
+    TK_DebugAssert( size != 0 );
     
-    TK_AllocatorTracker *tracker = TK_REINTERPRET_CAST( tracker, ptr );
+    TK_AllocatorTracker *tracker = (TK_AllocatorTracker *)(void *)ptr;
+    TK_DebugAssert( tracker->tracked != NULL );
+    TK_DebugAssert( tracker->tracked->alloc != NULL );
+    
     TK_Allocator *allocator = tracker->tracked;
-    if ( !allocator )
-        return NULL;
-    
     TK_AllocatorAllocFunc *f_alloc = allocator->alloc;
-    if ( !f_alloc )
-        return NULL;
     
     TK_AllocatorTrackerAllocation *allocation = f_alloc(
         allocator,
@@ -138,44 +155,51 @@ void *TK_AllocatorTracker_Alloc( TK_Allocator *ptr, TK_usize size )
     return allocation + 1;
     
 }
+
+
+
 void *TK_AllocatorFixedArena_Realloc( TK_Allocator *ptr, void *memory, TK_usize size_old, TK_usize size_new )
 {
-    if ( !ptr || !memory || size_old == 0 || size_new == 0 )
-        return NULL;
+    TK_DebugAssert( ptr != NULL );
+    TK_DebugAssert( memory != NULL );
+    TK_DebugAssert( size_old != 0 );
+    TK_DebugAssert( size_new != 0 );
     
-    TK_AllocatorFixedArena *fixedArena = TK_REINTERPRET_CAST( fixedArena, ptr );
+    TK_AllocatorFixedArena *fixedArena = (TK_AllocatorFixedArena *)(void *)ptr;
     
-    if ( memory != fixedArena->lastAlloc )
+    const TK_usize remaningSpace = fixedArena->size - fixedArena->pos;
+    if ( memory == fixedArena->lastAlloc )
+    {
+        fixedArena->pos = ( TK_usize )( fixedArena->lastAlloc - fixedArena->buf ) + size_new;
+        
+        return memory;
+    }
+    else if ( size_new <= remaningSpace )
     {
         TK_byte *reallocated = TK_AllocatorFixedArena_Alloc( ptr, size_new );
         if (!reallocated)
             return NULL;
         
         for ( TK_usize i = 0; i < ( size_old < size_new ) ? size_old : size_new; ++i )
-        {
             reallocated[i] = ( ( TK_byte * ) memory )[i];
-        }
         
         return reallocated;
-    }
-    else if ( size_new <= ( fixedArena->size - fixedArena->pos ) )
-    {
-        fixedArena->pos = ( TK_usize )( fixedArena->lastAlloc - fixedArena->buf ) + size_new;
-        
-        return memory;
     }
     
     return NULL;
 }
 
+
+
 void *TK_AllocatorFixedArena_Alloc( TK_Allocator *ptr, TK_usize size )
 {
-    if ( !ptr )
-        return NULL;
+    TK_DebugAssert( ptr != NULL );
+    TK_DebugAssert( size != 0 );
     
-    TK_AllocatorFixedArena *fixedArena = TK_REINTERPRET_CAST( fixedArena, ptr );
+    TK_AllocatorFixedArena *const fixedArena = (TK_AllocatorFixedArena *)(void *)ptr;
     
-    if ( size > ( fixedArena->size - fixedArena->pos ) )
+    const TK_usize remaningSpace = fixedArena->size - fixedArena->pos;
+    if ( size > remaningSpace )
         return NULL;
     
     void *allocation = fixedArena->buf + fixedArena->pos;

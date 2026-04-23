@@ -23,35 +23,35 @@ struct TK_StringSlice
     TK_usize len;
 };
 
-#define TK_StringSlice_From_CString(...)                                 \
-    ({                                                                   \
-        char *__string = TK_REINTERPRET_CAST( __string, (__VA_ARGS__) ); \
-        TK_usize len = 0;                                                \
-                                                                         \
-        TK_ComptimeIf ( TK_Type_IsArray( __VA_ARGS__ ) )                 \
-            len = sizeof( __VA_ARGS__ ) - 1;                             \
-                                                                         \
-        else if ( __string )                                             \
-            while ( __string[len] != '\0' )                              \
-                len++;                                                   \
-                                                                         \
-        (TK_StringSlice) {                                               \
-            .buf = __string,                                             \
-            .len = len,                                                  \
-        };                                                               \
+#define __TK_CreateStringSliceFromCString(...)                 \
+    ({                                                         \
+        TK_Type_Decay(__VA_ARGS__) __argument = (__VA_ARGS__); \
+        char *__string = *(char **)((void *)&__argument);      \
+        TK_usize len = 0;                                      \
+                                                               \
+        TK_ComptimeIf ( TK_Type_IsArray( __VA_ARGS__ ) )       \
+            len = sizeof( __VA_ARGS__ ) - 1;                   \
+                                                               \
+        else if ( __string )                                   \
+            while ( __string[len] != '\0' )                    \
+                len++;                                         \
+                                                               \
+        (TK_StringSlice) {                                     \
+            .buf = __string,                                   \
+            .len = len,                                        \
+        };                                                     \
     })
 
-#define TK_StringSlice(...)                                               \
-    ({                                                                    \
-        __typeof__(__VA_ARGS__) __argument = (__VA_ARGS__);               \
-                                                                          \
-        _Generic(TK_Type_Declval(TK_Type_Unqual(__argument)),             \
-            TK_String: TK_REINTERPRET_CAST( TK_StringSlice, __argument ), \
-            TK_StringSlice: __argument,                                   \
-                  char *: TK_StringSlice_From_CString(__argument),        \
-            const char *: TK_StringSlice_From_CString(__argument)         \
-        );                                                                \
-    })
+#define TK_CreateStringSlice(...)                                       \
+    _Generic(TK_Type_Declval( TK_Type_Unqual( __VA_ARGS__ ) ),          \
+        TK_StringSlice: ( __VA_ARGS__ ),                                \
+        TK_String: ({                                                   \
+            TK_Type_Decay(__VA_ARGS__) __value = ( __VA_ARGS__ );       \
+            *((TK_StringSlice*)((void *)&__value));                     \
+        }),                                                             \
+              char *: __TK_CreateStringSliceFromCString( __VA_ARGS__ ), \
+        const char *: __TK_CreateStringSliceFromCString( __VA_ARGS__ )  \
+    )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

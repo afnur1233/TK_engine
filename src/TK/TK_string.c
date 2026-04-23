@@ -1,9 +1,12 @@
 #include <TK/TK_string.h>
+#include <TK/TK_assert.h>
+
+
 
 TK_bool TK_StringGrow( TK_Allocator *allocator, TK_String *string, TK_usize new_cap )
 {
-    if ( !allocator || !string )
-        return false;
+    TK_DebugAssert( allocator != NULL );
+    TK_DebugAssert( string != NULL );
     
     if (new_cap <= string->cap)
         return true;
@@ -36,6 +39,8 @@ TK_bool TK_StringGrow( TK_Allocator *allocator, TK_String *string, TK_usize new_
     return true;
 }
 
+
+
 TK_bool TK_StringAppend( TK_Allocator *allocator, TK_String *string, TK_byte *buf, TK_usize len )
 {
     if ( !allocator || !string )
@@ -58,6 +63,8 @@ TK_bool TK_StringAppend( TK_Allocator *allocator, TK_String *string, TK_byte *bu
     
     return true;
 }
+
+
 
 TK_String TK_StringFree( TK_Allocator *allocator, TK_String string )
 {
