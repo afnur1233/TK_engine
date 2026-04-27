@@ -17,8 +17,8 @@
 
 #define TK_Type_IsSameType(T, U)                    \
     _Generic(TK_Type_Declval(TK_Type_Identity(T)*), \
-        TK_Type_Identity(U) *: true,                \
-        default: false                              \
+        TK_Type_Identity(U) *: 1,                   \
+        default: 0                                  \
     )
 
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)

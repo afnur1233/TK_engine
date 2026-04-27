@@ -20,4 +20,8 @@ typedef TK_i64   TK_isize;
 typedef TK_u64   TK_usize;
 typedef TK_u8    TK_byte;
 typedef bool     TK_bool;
+
+#define TK_False ((TK_bool)0)
+#define TK_True ((TK_bool)1)
+
 #endif

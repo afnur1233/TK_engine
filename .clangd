@@ -1,5 +1,6 @@
 CompileFlags:
   Add: 
+    - -xc
     - -std=c23
     - -I../deps/cglm/include
     - -I../deps/glfw/include

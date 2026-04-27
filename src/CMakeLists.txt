@@ -1,11 +1,10 @@
 add_library(TK STATIC)
 target_sources(TK PRIVATE
-    TK/TK_filesystem.c
+    TK/TK_entity.c
     TK/TK_memory.c
-    TK/TK_scheduler.c
     TK/TK_string.c
     TK/TK_event.c
-    TK/ECS/TK_ecs.c)
+    TK/TK_filesys.c)
 set_property(TARGET TK PROPERTY C_STANDARD ${C_STANDARD})
 target_include_directories(TK PRIVATE
     ./

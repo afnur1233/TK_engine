@@ -1,44 +1,33 @@
 #ifndef __TK_STRING_H__
 #define __TK_STRING_H__
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <TK/TK_macro.h>
 #include <TK/TK_memory.h>
 #include <TK/TK_stdint.h>
 #include <TK/TK_typetraits.h>
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct TK_String      TK_String;
-typedef struct TK_StringSlice TK_StringSlice;
-
-struct TK_String
+typedef struct TK_String
 {
     TK_byte *buf;
     TK_usize len;
     TK_usize cap;
-};
+} TK_String;
 
-struct TK_StringSlice
+typedef struct TK_StringSlice
 {
     TK_byte *buf;
     TK_usize len;
-};
+} TK_StringSlice;
 
 #define __TK_CreateStringSliceFromCString(...)                 \
     ({                                                         \
         TK_Type_Decay(__VA_ARGS__) __argument = (__VA_ARGS__); \
         char *__string = *(char **)((void *)&__argument);      \
-        TK_usize len = 0;                                      \
-                                                               \
-        TK_ComptimeIf ( TK_Type_IsArray( __VA_ARGS__ ) )       \
-            len = sizeof( __VA_ARGS__ ) - 1;                   \
-                                                               \
-        else if ( __string )                                   \
-            while ( __string[len] != '\0' )                    \
-                len++;                                         \
                                                                \
         (TK_StringSlice) {                                     \
             .buf = __string,                                   \
-            .len = len,                                        \
+            .len = TK_Type_IsArray( __VA_ARGS__ )              \
+                ? sizeof( __VA_ARGS__ ) - 1                    \
+                : __argument ? strlen(__argument) : 0,         \
         };                                                     \
     })
 
@@ -53,11 +42,8 @@ struct TK_StringSlice
         const char *: __TK_CreateStringSliceFromCString( __VA_ARGS__ )  \
     )
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 TKAPI TK_bool   TK_StringGrow   ( TK_Allocator *allocator, TK_String *string, TK_usize new_cap );
 TKAPI TK_bool   TK_StringAppend ( TK_Allocator *allocator, TK_String *string, TK_byte *buf, TK_usize len );
 TKAPI TK_String TK_StringFree   ( TK_Allocator *allocator, TK_String string );
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #endif
